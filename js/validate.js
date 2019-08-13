@@ -112,45 +112,76 @@ $(document).ready(function(){
         if($(this).val() == 'paypal'){
             $('#paypal').show();
             $('#bitcoin').hide();
+            $('#credit-card').hide();
         } else if($(this).val() == 'bitcoin') {
             $('#bitcoin').show();
             $('#paypal').hide();
+            $('#credit-card').hide();
         } else {
             $('#paypal').hide();
             $('#bitcoin').hide();
+            $('#credit-card').show();
         }
     });
 
 
-    // Validate Name, checkboxe selection, and payment details when form is submitted
+    // Validate Name, email address, checkbox selection, and payment details when form is submitted
     $('button').click(function(e){
-        if($('#name').val() == ''){
+        if(!isValidName($('#name').val()) || $('#name').val() == '') {
             e.preventDefault();
-            $('#name').attr('placeholder', 'This field is required.');
+            $('label[for=name]').text('Please enter a valid first and last name.').css('color', 'red');
             $('#name').addClass('submission-error');
+        } else {
+            $('label[for=name]').text('Name:').css('color', '#000');
+            $('#name').removeClass('submission-error');
+        }
+        if(!isValidEmail($('#mail').val())) {
+            e.preventDefault();
+            $('label[for=mail]').text('Make sure your email address is correct.').css('color', 'red');
+            $('#mail').addClass('submission-error');
+        } else {
+            $('label[for=mail]').text('Email:').css('color', '#000');
+            $('#mail').removeClass('submission-error');
         }
         if($(".activities input:checked").length == 0) {
             e.preventDefault();
             $('.activities').addClass('submission-error');
-            $('.activities legend').text('You must choose at least one presentation.').addClass('submission-error-text');
+            $('.activities legend').text('You must choose at least one presentation.').addClass('submission-error-text').css('padding-left', '5px');
+        } else {
+            $('.activities').removeClass('submission-error');
+            $('.activities legend').text('Register for Activities').removeClass('submission-error-text').css('padding-left', '0px');
+        }
+        if(!isValidCredit($('#cc-num').val())) {
+            e.preventDefault();
+            $('label[for=cc-num]').text('Please verify your card number.').css('color', 'red');
+            $('#cc-num').addClass('submission-error');
         }
         if(!isValidZip($('#zip').val())) {
             e.preventDefault();
-            $('#zip').attr('placeholder', 'Required.');
+            $('label[for=zip]').text('Invalid ZIP').css('color', 'red');
+            $('#zip').attr('placeholder', 'Invalid ZIP');
             $('#zip').addClass('submission-error');
+        } else {
+            $('label[for=zip]').text('Zip Code:').css('color', '#000');
+            $('#zip').removeClass('submission-error');
+            $('#zip').removeAttr('placeholder');
         }
-        if(!isValidCvv($('#cvv').val())) {
+        if($('#cvv').val() == '') {
+            e.preventDefault();
+            $('#cvv').attr('placeholder', 'Required.');
+            $('label[for=cvv]').text('Required.').css('color', 'red');
+            $('#cvv').addClass('submission-error');
+        } else if(!isValidCvv($('#cvv').val())) {
             e.preventDefault();
             $('#cvv').attr('placeholder', 'Invalid CVV');
-            $('label[for=cvv]').text('Invalid CVV');
+            $('label[for=cvv]').text('Invalid CVV').css('color', 'red');
             $('#cvv').addClass('submission-error');
-        }
-        if(!$('#cvv').val()) {
-            $('#cvv').attr('placeholder', 'Required.');
-            $('#cvv').addClass('submission-error');
+        }  else {
+            $('label[for=cvv]').text('CVV:').css('color', '#000');
+            $('#cvv').removeClass('submission-error');
+            $('#cvv').removeAttr('placeholder');
         }
     });
-
 
 
     // Validate email input in real time against regex as user types an email address
@@ -158,10 +189,10 @@ $(document).ready(function(){
         var $regexname = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if(!$(this).val().match($regexname)) {
             $(this).addClass('submission-error');
-            $('label[for=mail]').text('Make sure your email address is correct.');
+            $('label[for=mail]').text('Make sure your email address is correct.').css('color', 'red');
         }
         else {
-            $('label[for=mail]').text('Email:');
+            $('label[for=mail]').text('Email:').css('color', '#000');
             $(this).removeClass('submission-error');
         }
     });
@@ -169,16 +200,36 @@ $(document).ready(function(){
 
     // Validate credit card input in real time against regex as user types an email address
     $('#cc-num').on('input',function(){
-        var $regexcc = /^(\d{4}[- ]){3}\d{4}|\d{16}$/;
+        var $regexcc = /^[1-9][0-9]{12,15}$/;
         if(!$(this).val().match($regexcc)) {
             $(this).addClass('submission-error');
-            $('label[for=cc-num]').text('Verify your credit card number.');
+            $('label[for=cc-num]').text('Verify your credit card number.').css('color', 'red');
         }
         else {
             $(this).removeClass('submission-error');
-            $('label[for=cc-num]').text('Card Number:');
+            $('label[for=cc-num]').text('Card Number:').css('color', '#000');
         }
     });
+
+
+    // Function tests user's name against regex
+    function isValidName($name) {
+        var nameReg = /^[a-z ,.'-]+$/i;
+        return nameReg.test($name);
+    }
+
+
+    // Function tests email against regex
+    function isValidEmail($email) {
+        var emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return emailReg.test($email);
+    }
+
+    // Function tests credit card against regex
+    function isValidCredit($credit) {
+        var creditReg = /^[1-9][0-9]{12,15}$/;
+        return creditReg.test($credit);
+    }
     
 
     // Function tests user supplied Zip code against regex
@@ -190,8 +241,8 @@ $(document).ready(function(){
 
     // Function tests user supplied CVV against regex
     function isValidCvv($cvv) {
-        var cvvreg = /[0-9]{3}/;
-        return cvvreg.test($cvv);
+        var cvvReg = /[0-9]{3}/;
+        return cvvReg.test($cvv);
     }
 
 });
