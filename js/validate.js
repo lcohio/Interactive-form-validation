@@ -181,6 +181,9 @@ $(document).ready(function(){
             $('#cvv').removeClass('submission-error');
             $('#cvv').removeAttr('placeholder');
         }
+        if($('#payment').val() == 'paypal' || $('#payment').val() == 'bitcoin'){
+            $('form').submit();
+        }
     });
 
 
