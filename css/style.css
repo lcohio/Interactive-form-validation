@@ -10,7 +10,7 @@
 
 body,
 input,
-button {
+.submit {
 	font-family: 'Nunito', sans-serif;
 }
 
@@ -47,7 +47,7 @@ form {
 
 fieldset,
 legend,
-button {
+.submit {
 	padding: 0;
 	border: none;
 }
@@ -57,7 +57,7 @@ fieldset {
 }
 
 legend,
-button {
+.submit {
 	font-size: 1.25em;	
 }
 
@@ -106,7 +106,8 @@ input[type="radio"] {
 	display: inline-block;
 }
 
-button {
+.submit {
+	display: inline-block;
 	color: #fff;
 	padding: .55em 1.25em;
 	background: #083f57;
@@ -117,7 +118,7 @@ button {
 	transition: all 0.5s;
 }
 
-button:hover {
+.submit:hover {
 	background: #6F9DDC;
 }
 
@@ -185,7 +186,7 @@ option {
 	header {
 		padding: 2em 0;
 	}
-	button {
+	.submit {
 		width: 100%;
 	}
 }
