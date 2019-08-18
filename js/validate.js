@@ -161,6 +161,8 @@ $(document).ready(function(){
         }
     });
 
+
+    // Validate Name, e-mail and event selection fields
     const handleUserValidation = () => {
         if(!isValidName($('#name').val()) || $('#name').val() == '') {
             $('label[for=name]').text('Please enter a valid first and last name.').css('color', 'red');
@@ -187,6 +189,8 @@ $(document).ready(function(){
         }
     }
 
+
+    // Validate credit card, zip code and CVV fields if paying with credit card
     const handlePaymentValidation = () => {
         if(!isValidCredit($('#cc-num').val())) {
             $('label[for=cc-num]').text('Please verify your card number.').css('color', 'red');
